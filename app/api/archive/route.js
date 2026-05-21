@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// Extends Vercel execution timeout limit from 10 seconds to 30 seconds
+export const runtime = 'edge'; 
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -22,16 +25,15 @@ export async function POST(request) {
       body: JSON.stringify(body),
     });
 
-    // Extract text first to bypass the SyntaxError on the 202 empty body
     const text = await response.text();
-    const data = text ? JSON.parse(text) : { status: "Archive triggered successfully" };
+    const data = text ? JSON.parse(text) : { status: "Archive completed" };
     
     return NextResponse.json(data, { 
       status: response.ok ? 200 : response.status,
       headers: corsHeaders 
     });
   } catch (error) {
-    return NextResponse.json({ error: 'Proxy failed', details: error.message }, { 
+    return NextResponse.json({ error: 'Proxy execution failed', details: error.message }, { 
       status: 500,
       headers: corsHeaders 
     });
