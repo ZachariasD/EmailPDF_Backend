@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 
-// Extends Vercel execution timeout limit from 10 seconds to 30 seconds
-export const runtime = 'edge'; 
+// Restores stable Node.js runtime and expands the execution window to 60s
+export const runtime = 'nodejs';
+export const maxDuration = 60; 
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -26,14 +27,22 @@ export async function POST(request) {
     });
 
     const text = await response.text();
-    const data = text ? JSON.parse(text) : { status: "Archive completed" };
+    let parsedData;
     
-    return NextResponse.json(data, { 
+    try {
+      parsedData = text ? JSON.parse(text) : { status: "Archive triggered successfully" };
+    } catch (parseError) {
+      parsedData = { status: "Automation completed", rawResponse: text || "No data" };
+    }
+    
+    return NextResponse.json(parsedData, { 
       status: response.ok ? 200 : response.status,
       headers: corsHeaders 
     });
+
   } catch (error) {
-    return NextResponse.json({ error: 'Proxy execution failed', details: error.message }, { 
+    console.error("Proxy Crash Stack:", error);
+    return NextResponse.json({ error: 'Proxy failed', details: error.message }, { 
       status: 500,
       headers: corsHeaders 
     });
