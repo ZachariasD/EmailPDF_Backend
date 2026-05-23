@@ -15,7 +15,7 @@ export async function OPTIONS() {
 
 export async function POST(request) {
   // Ensure this points to your NEW Flow 3 URL
-  const INSIGHTS_FLOW_URL = "https://default062a8e8e449048f39ee3b309e2cfa4.ad.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/443d6efc77744c15b54d17b2db67ab01/triggers/manual/paths/invoke?api-version=1"; 
+  const INSIGHTS_FLOW_URL = "https://default062a8e8e449048f39ee3b309e2cfa4.ad.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/443d6efc77744c15b54d17b2db67ab01/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9mDGxxMjJOHLl3wMIjYucZ9IrL2ZPVUrvyzNnTItS74"; 
 
   try {
     const body = await request.json();
